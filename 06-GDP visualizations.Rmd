@@ -1,0 +1,111 @@
+---
+title: "GDP visualizations"
+date: "12/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r}
+gapminder <- read.csv("~/Data/GP_population_5Y.csv")
+View(gapminder)
+```
+#Selecting Ghana and Senegal [filter () function from the dplyr package]
+
+```{r filter}
+g3<-gapminder%>% filter(country=='Ghana'|country=='Senegal')
+```
+## Including Plots
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=2.5)
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=2.5) + scale_y_discrete(breaks=c(0,250,500,750,1000,1250,1500,1750))
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=2.5)+                           xlab("Year")+ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=1.5)+ 
+  xlab("Year")+ 
+  ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over    the Years")+
+   theme(plot.title= element_text(face = "bold", size = 20,       hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=14),
+        axis.text.y   = element_text(size=14),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=14),
+        legend.text   = element_text(size=14),
+        legend.title  = element_text(size=14),
+        panel.background = element_rect(fill =         "white"),
+        panel.grid.major.y = element_line(colour = "grey10"))
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=1.5)+                           xlab("Year")+ ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")+
+  theme(plot.title= element_text(face = "bold",   size = 18, hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=14),
+        axis.text.y   = element_text(size=14),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=14),
+        legend.text   = element_text(size=14),
+        legend.title  = element_text(size=14),
+        panel.background = element_rect(fill =         "white"),
+        panel.grid.major.y = element_line(colour = "grey10"))+ 
+  scale_color_manual(values=c("#CC6666", "#9999CC"))
+```
+
+#Now, can try to understand the story hidden in the data. 
+
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=1.5)+                          
+  xlab("Year")+ 
+  ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")+
+  theme(plot.title= element_text(face = "bold",   size = 18, hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=14),
+        axis.text.y   = element_text(size=14),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=14),
+        legend.text   = element_text(size=14),
+        legend.title  = element_text(size=14),
+        panel.background = element_rect(fill =         "white"),
+        panel.grid.major.y = element_line(colour = "grey10"))+ 
+  scale_color_manual(values=c("#CC6666", "#9999CC")) 
+
++
+  geom_vline(xintercept = 18, linetype="dashed", color = "red", size=1.0)+
+  annotate(geom="text", x=1967, y=5000, label=".....", color="red",size=6)
+
+```
+
+#Ghana was a country of immigration in the early years after its 1957 independence
+#During the 1970s, severe drought and an economic downturn transformed Ghana into a country of emigration
+
+
+#Senegal and French Sudan were merged and granted independence in 1960 as the Mali Federation. The union broke up after only a few months
+#Senegal is one of the most stable democracies in Africa and has a long history of participating in international peacekeeping and regional mediation. 
+#Senegal’s high total fertility rate of almost 4.5 children per woman continues to bolster the country’s large youth cohort – more than 60% of the population is under the age of 25.
