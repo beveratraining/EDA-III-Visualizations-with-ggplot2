@@ -1,0 +1,55 @@
+---
+title: "airquality ggplot2"
+date: "12/15/2021"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import}
+data("airquality")
+View(airquality)
+```
+
+```{r structure}
+str(airquality)
+glimpse(airquality)
+```
+
+```{r remove missing values}
+complete.cases(airquality)
+x <- airquality[complete.cases(airquality),]
+str(x)
+
+y <- na.omit(airquality)
+str(y)
+```
+
+```{r dot}
+ggplot(x,aes(x=Solar.R)) + geom_dotplot(dotsize=0.4)
+```
+
+```{r hist}
+ggplot(x,aes(x=Solar.R)) + geom_histogram(binwidth=10)
+```
+
+```{r density}
+ggplot(x,aes(x=Solar.R)) + geom_density()
+```
+
+```{r box}
+ggplot(x,aes(x=1,y=Solar.R)) + geom_boxplot()
+```
+
+```{r flip}
+ggplot(x,aes(x=1, y=Solar.R)) + 
+  geom_boxplot()+
+  coord_flip()
+```
+
+```{r facet}
+ggplot(x,aes(x=Temp))+
+  geom_histogram(binwidth = 10)+
+  facet_wrap(~Wind)
+```
