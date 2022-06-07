@@ -1,0 +1,52 @@
+---
+title: "Timeseries Heatmap using VIX Close Price"
+author: "EDA ggplot2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# http://margintale.blogspot.in/2012/04/ggplot2-time-series-heatmaps.html
+
+```{r}
+library(plyr)
+library(scales)
+library(zoo)
+```
+
+```{r}
+df <- read.csv("https://raw.githubusercontent.com/selva86/datasets/master/yahoo.csv")
+df$date <- as.Date(df$date)  # format date
+df <- df[df$year >= 2012, ]  # filter reqd years
+df
+```
+
+# Create Month Week
+```{r}
+df$yearmonth <- as.yearmon(df$date)
+df$yearmonthf <- factor(df$yearmonth)
+df <- ddply(df,.(yearmonthf), transform, monthweek=1+week-min(week))  # compute week number of month
+
+df$monthf <- factor(df$monthf, order=TRUE, levels=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov",'Dec'))
+
+df$weekdayf <- factor(df$weekdayf, order=TRUE, levels=c("Mon","Tue","Wed","Thu", "Fri"))
+                      
+df <- df[, c("year", "yearmonthf", "monthf", "week", "monthweek", "weekdayf", "VIX.Close")]
+head(df)
+```
+
+# Plot Heatmap
+```{r}
+ggplot(df, aes(monthweek, weekdayf, fill = VIX.Close)) + 
+  geom_tile(colour = "white") + 
+  facet_grid(year~monthf) + 
+  scale_fill_gradient(low="red", high="green") +
+  labs(x="Week of Month",
+       y="",
+       title = "Time-Series Calendar Heatmap", 
+       subtitle="Yahoo Closing Price", 
+       fill="Close")
+```
+

@@ -1,0 +1,175 @@
+---
+title: "GDP visualizations"
+date: "12/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+```
+
+```{r}
+gapminder <- read.csv("~/Data/GP_population_5Y.csv")
+View(gapminder)
+```
+
+#Looking forward to EDA III: ggplot2
+```{r starts.with}
+# Get the start letter of each country
+starts.with <- substr(gapminder$country, start = 1, stop = 1)
+unique(starts.with) #observing the unique letters
+
+# Filter countries that start with "A" or "Z"
+az.countries <- gapminder[starts.with %in% c("A", "Z"), ]
+
+# Make the plot
+ggplot(data = az.countries, aes(x = year, y = lifeExp)) +
+  geom_line() + 
+  facet_wrap( ~country)
+
+ggplot(data = az.countries, aes(x = year, y = lifeExp, color = continent)) +
+  geom_line() + 
+  facet_wrap( ~country)
+```
+
+#using the pipe operator - chaining method
+```{r gpplot2}
+gapminder %>%
+   # Get the start letter of each country
+   mutate(startsWith = substr(country, start = 1, stop = 1)) %>%
+   # Filter countries that start with "A" or "Z"
+   filter(startsWith %in% c("A", "Z")) %>%
+   # Make the plot
+   ggplot(aes(x = year, y = lifeExp, color = continent)) + #plot
+   geom_line() + #geometry
+   facet_wrap( ~country) #facet
+```
+
+```{r}
+gapminder %>%
+    # Filter countries that start with "A" or "Z"
+	filter(substr(country, start = 1, stop = 1) %in% c("A", "Z")) %>%
+	# Make the plot
+	ggplot(aes(x = year, y = lifeExp, color = continent)) + #plot
+	geom_line() + #geometry
+	facet_wrap( ~country) #facet
+
+```
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(gapminder)
+
+p <- gapminder %>%
+  filter(year==1977, continent=='Africa', lifeExp >50) %>%
+  ggplot(aes(gdpPercap, lifeExp, size = pop, group=country)) +
+  geom_point() +
+  theme_bw()
+
+ggplotly(p)
+```
+
+#deeper dive into specific countries
+
+#Selecting Ghana and Senegal 
+```{r filter}
+g3<-gapminder %>% 
+  filter(country=='Ghana'| country=='Senegal') 
+ 
+g4<-gapminder %>% 
+  filter(country %in% c('Ghana','Senegal'))
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, color=country))+
+  geom_line(size=2.5)
+
+ggplot(g4, # Change colors of lines by group
+       aes(x = year, y = gdpPercap, group = country)) +
+  geom_point(aes(col = country),size=1.5)
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap,color=country)) +
+  geom_line(size=1) + scale_y_continuous(breaks=c(0,250,500,750,1000,1250,1500,1750))
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country, color=country)) +
+  geom_line(size=1.5) +                                    xlab("Year")+ 
+  ylab("GDP/Capita") +
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, color=country)) +
+  geom_line(size=1.5)+ 
+  xlab("Year")+ 
+  ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")+
+   theme(plot.title= element_text(face = "bold", size = 9, hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=12),
+        axis.text.y   = element_text(size=13),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=15),
+        legend.text   = element_text(size=16),
+        legend.title  = element_text(size=17),
+        panel.background = element_rect(fill =         "grey5"),
+        panel.grid.major.y = element_line(colour = "grey10"))
+```
+
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=1.5) +                           xlab("Year") + 
+  ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years") +
+  theme(plot.title= element_text(face = "bold",size = 10, hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=14),
+        axis.text.y   = element_text(size=14),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=14),
+        legend.text   = element_text(size=14),
+        legend.title  = element_text(size=14),
+        panel.background = element_rect(fill =         "white"),
+        panel.grid.major.y = element_line(colour = "grey10"))+ 
+  scale_color_manual(values=c("#CC6666", "#9999CC"))
+```
+
+#Now, try to understand the story hidden in the data. 
+```{r}
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=1.5)+                          
+  xlab("Year")+ 
+  ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")+
+  theme(plot.title= element_text(face = "bold",size = 11, hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=14),
+        axis.text.y   = element_text(size=14),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=14),
+        legend.text   = element_text(size=14),
+        legend.title  = element_text(size=14),
+        panel.background = element_rect(fill =         "white"),
+        panel.grid.major.y = element_line(colour = "grey10"))+ 
+  scale_color_manual(values=c("#CC6666", "#9999CC")) +
+  geom_vline(xintercept = 1987, linetype="dashed", color = "red", size=1.0) +
+  annotate(geom="text", x=1988, y=2000, label="downturn", color="red",size=6)
+
+```
+
+#Ghana was a country of immigration in the early years after its 1957 independence
+#During the 1970s, severe drought and an economic downturn transformed Ghana into a country of emigration
+
+
+#Senegal and French Sudan were merged and granted independence in 1960 as the Mali Federation. The union broke up after only a few months
+#Senegal is one of the most stable democracies in Africa and has a long history of participating in international peacekeeping and regional mediation. 
+#Senegal’s high total fertility rate of almost 4.5 children per woman continues to bolster the country’s large youth cohort – more than 60% of the population is under the age of 25.
