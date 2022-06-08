@@ -90,7 +90,7 @@ g4<-gapminder %>%
 ```
 
 ```{r}
-ggplot(data=g3, aes(x=year, y=gdpPercap, color=country))+
+ggplot(data=g3, aes(x=year, y=gdpPercap, color=country)) +
   geom_line(size=2.5)
 
 ggplot(g4, # Change colors of lines by group
@@ -105,9 +105,9 @@ ggplot(data=g3, aes(x=year, y=gdpPercap,color=country)) +
 
 ```{r}
 ggplot(data=g3, aes(x=year, y=gdpPercap, group=country, color=country)) +
-  geom_line(size=1.5) +                                    xlab("Year")+ 
-  ylab("GDP/Capita") +
-  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")
+  geom_line(size=1.5) +                                     xlab("Year")+ 
+ylab("GDP/Capita") +
+ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")
 ```
 
 ```{r}
@@ -129,7 +129,8 @@ ggplot(data=g3, aes(x=year, y=gdpPercap, color=country)) +
 
 ```{r}
 ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
-  geom_line(size=1.5) +                           xlab("Year") + 
+  geom_line(size=1.5) +                           
+  xlab("Year") + 
   ylab("GDP/Capita")+
   ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years") +
   theme(plot.title= element_text(face = "bold",size = 10, hjust = 0.5), #bring the title to the middle
