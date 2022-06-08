@@ -17,7 +17,7 @@ library(magrittr)
 ```
 
 ```{r}
-gapminder <- read.csv("~/Data/GP_population_5Y.csv")
+gapminder2 <- read.csv("C:\\Users\\redbe\\OneDrive\\Documents\\Data\\GP_population_5Y.csv")
 View(gapminder)
 ```
 
@@ -123,7 +123,7 @@ ggplot(data=g3, aes(x=year, y=gdpPercap, color=country)) +
         axis.title.y  = element_text(size=15),
         legend.text   = element_text(size=16),
         legend.title  = element_text(size=17),
-        panel.background = element_rect(fill =         "grey5"),
+        panel.background = element_rect(fill =         "grey"),
         panel.grid.major.y = element_line(colour = "grey10"))
 ```
 
@@ -166,6 +166,28 @@ ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
   annotate(geom="text", x=1988, y=2000, label="downturn", color="red",size=6)
 
 ```
+#example IF the panel box does not show. Add in panel.border etc...
+ggplot(data=g3, aes(x=year, y=gdpPercap, group=country,color=country)) +
+  geom_line(size=1.5)+                          
+  xlab("Year")+ 
+  ylab("GDP/Capita")+
+  ggtitle("Comparing Per Capita GDP of Ghana and Senegal over the Years")+
+  theme(plot.title= element_text(face = "bold",size = 11, hjust = 0.5), #bring the title to the middle
+        axis.text.x   = element_text(size=14),
+        axis.text.y   = element_text(size=14),
+        axis.title.x  = element_text(size=14),
+        axis.title.y  = element_text(size=14),
+        legend.text   = element_text(size=14),
+        legend.title  = element_text(size=14),
+        panel.background = element_rect(fill =         "white"),
+        panel.border = element_rect(color = "black", fill=NA, size = 1),
+        panel.grid.minor.y = element_line(colour = "grey"),
+        panel.grid.minor.x = element_line(colour = "grey"),
+        panel.grid.major.x = element_line(colour = "grey"),
+        panel.grid.major.y = element_line(colour = "grey10"))+ 
+  scale_color_manual(
+color="red",size=6)
+
 
 #Ghana was a country of immigration in the early years after its 1957 independence
 #During the 1970s, severe drought and an economic downturn transformed Ghana into a country of emigration
