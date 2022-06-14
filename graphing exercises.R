@@ -1,6 +1,11 @@
-#load the data
+#1- load library 
+library(tidyverse)
+
+#2- load the data
 data <- read.table("biocorecrg.csv", 
         header=TRUE, sep=",")
+
+#3 - View data
 View(data)
 
 #4- Using ggplot, create a simple scatter plot representing gene expression of "sampleB" on the x-axis and "sampleH" on the y-axis.
